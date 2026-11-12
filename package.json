@@ -1,0 +1,23 @@
+{
+  "name": "fabledevil",
+  "version": "2.0.0",
+  "description": "FableDevil — a clean little browser rage-platformer with 30 levels, dark/light themes, and obvious ragebait.",
+  "main": "game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Leonxlnx/level-devil.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Leonxlnx/level-devil/issues"
+  },
+  "homepage": "https://github.com/Leonxlnx/level-devil#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#14161d" />
+<title>Вход</title>
+<script>
+  try {
+    var t = localStorage.getItem("fd_theme");
+    if (!t) t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root, [data-theme="dark"] {
+    --bg: #0f1116; --bg2: #181b23; --fg: #ece8df; --muted: #9a978e;
+    --line: rgba(236, 232, 223, 0.14); --panel: #181b23; --field: #0f1116;
+    --accent: #ffb24d; --accent-press: #d98a26; --danger: #ff5d52; --on-accent: #16110a;
+  }
+  [data-theme="light"] {
+    --bg: #f0ece2; --bg2: #e6e0d3; --fg: #1c1e26; --muted: #6b6a63;
+    --line: rgba(28, 30, 38, 0.14); --panel: #fbf9f4; --field: #fff;
+    --accent: #ef7c1b; --accent-press: #c9650f; --danger: #d23b31; --on-accent: #16110a;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    min-height: 100dvh;
+    display: flex; align-items: center; justify-content: center;
+    padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    font-family: "Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--fg);
+    background: radial-gradient(ellipse 120% 80% at 50% 0%, var(--bg2) 0%, var(--bg) 70%);
+    background-color: var(--bg);
+  }
+  .card {
+    width: 100%; max-width: 380px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 26px 22px 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+  .brand { text-align: center; margin-bottom: 18px; }
+  .brand h1 { margin: 0; font-size: 30px; font-weight: 900; letter-spacing: 0.01em; line-height: 1; }
+  .brand h1 span { color: var(--accent); }
+  .brand p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 14px; background: var(--field); border: 1px solid var(--line); margin-bottom: 20px; }
+  .tabs button {
+    font: inherit; font-size: 15px; font-weight: 700; padding: 10px 6px; border: 0; border-radius: 10px;
+    color: var(--muted); background: transparent; cursor: pointer;
+  }
+  .tabs button[aria-selected="true"] { background: var(--accent); color: var(--on-accent); }
+
+  .avatar-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .avatar {
+    width: 84px; height: 84px; flex: none; border-radius: 20px;
+    background: var(--field); border: 1px solid var(--line); overflow: hidden;
+  }
+  .avatar img { width: 100%; height: 100%; display: block; }
+  .avatar-side { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .avatar-side small { color: var(--muted); font-size: 13px; line-height: 1.35; }
+  .ghost {
+    align-self: flex-start;
+    font: inherit; font-size: 14px; font-weight: 700; padding: 9px 14px; border-radius: 11px;
+    color: var(--fg); background: var(--field); border: 1px solid var(--line); cursor: pointer;
+  }
+  .ghost:active { transform: scale(0.96); }
+
+  label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); margin: 0 0 6px 2px; }
+  input {
+    width: 100%; font: inherit; font-size: 18px; font-weight: 600; color: var(--fg);
+    background: var(--field); border: 1.5px solid var(--line); border-radius: 13px;
+    padding: 13px 14px; outline: none; margin-bottom: 14px;
+  }
+  input:focus { border-color: var(--accent); }
+  #pin { letter-spacing: 0.6em; font-size: 24px; text-align: center; padding-left: calc(14px + 0.6em); }
+  .note { margin: -8px 2px 14px; font-size: 12.5px; line-height: 1.35; color: var(--muted); }
+  .err {
+    min-height: 20px; margin: -2px 2px 12px; font-size: 14px; font-weight: 600; color: var(--danger);
+  }
+  .submit {
+    width: 100%; font: inherit; font-size: 19px; font-weight: 800; letter-spacing: 0.06em;
+    color: var(--on-accent); background: var(--accent); border: 0; border-radius: 14px;
+    padding: 15px; cursor: pointer; box-shadow: 0 6px 0 var(--accent-press);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+  }
+  .submit:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--accent-press); }
+  .submit:disabled { opacity: 0.6; cursor: wait; }
+  .foot { text-align: center; margin: 16px 0 0; font-size: 13px; color: var(--muted); }
+  .hidden { display: none !important; }
+  .checking { text-align: center; color: var(--muted); padding: 30px 0; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand">
+      <h1>ЧЁРТОВА <span>БАСНЯ</span></h1>
+      <p>введи имя и PIN — и вперёд</p>
+    </div>
+
+    <div id="checking" class="checking">проверяем…</div>
+
+    <form id="form" class="hidden" novalidate autocomplete="off">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-new" aria-selected="true">Я новый</button>
+        <button type="button" role="tab" id="tab-old" aria-selected="false">Уже играл</button>
+      </div>
+
+      <div class="avatar-row" id="avatar-row">
+        <div class="avatar"><img id="avatar" alt="Твой аватар" /></div>
+        <div class="avatar-side">
+          <small>Это твой аватар в таблице лидеров</small>
+          <button type="button" class="ghost" id="reroll">🎲 Другой</button>
+        </div>
+      </div>
+
+      <label for="name" id="name-label">Ник в игре</label>
+      <input id="name" name="nickname" maxlength="20" placeholder="Будет на экране" autocapitalize="words" spellcheck="false" enterkeyhint="next" />
+
+      <div id="real-wrap">
+        <label for="real">Имя и фамилия</label>
+        <input id="real" name="realname" maxlength="60" placeholder="Например, Анна Иванова" autocapitalize="words" spellcheck="false" enterkeyhint="next" autocomplete="name" />
+        <p class="note">Не показываем на экране — нужно, чтобы вручить приз победителю 🏆</p>
+      </div>
+
+      <label for="pin" id="pin-label">Придумай PIN (4 цифры)</label>
+      <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="••••" autocomplete="new-password" enterkeyhint="go" />
+
+      <div class="err" id="err" role="alert"></div>
+      <button class="submit" id="submit" type="submit">ИГРАТЬ</button>
+      <p class="foot" id="foot">PIN нужен, чтобы зайти с другого устройства</p>
+    </form>
+  </main>
+
+<script src="api.js"></script>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  let mode = "new";
+  let seed = API.randomSeed();
+
+  const MSG = {
+    bad_name: "Ник должен быть от 2 до 20 символов",
+    bad_real_name: "Напиши настоящее имя и фамилию",
+    bad_pin: "PIN — ровно 4 цифры",
+    name_taken: "Это имя уже занято. Если это ты — открой «Уже играл»",
+    bad_credentials: "Неверное имя или PIN",
+    network: "Нет связи с сервером. Попробуй ещё раз",
+  };
+
+  function setAvatar() { $("avatar").src = API.avatarUrl(seed); }
+  function setMode(m) {
+    mode = m;
+    $("tab-new").setAttribute("aria-selected", m === "new");
+    $("tab-old").setAttribute("aria-selected", m === "old");
+    $("avatar-row").classList.toggle("hidden", m !== "new");
+    $("real-wrap").classList.toggle("hidden", m !== "new");
+    $("name").placeholder = m === "new" ? "Будет на экране" : "Твой ник";
+    $("pin-label").textContent = m === "new" ? "Придумай PIN (4 цифры)" : "Твой PIN";
+    $("pin").setAttribute("autocomplete", m === "new" ? "new-password" : "current-password");
+    $("submit").textContent = m === "new" ? "ИГРАТЬ" : "ВОЙТИ";
+    $("foot").textContent = m === "new" ? "PIN нужен, чтобы зайти с другого устройства" : "Забыл PIN? Заведи нового игрока";
+    $("err").textContent = "";
+  }
+
+  $("tab-new").onclick = () => setMode("new");
+  $("tab-old").onclick = () => setMode("old");
+  $("reroll").onclick = () => { seed = API.randomSeed(); setAvatar(); };
+  $("pin").addEventListener("input", (e) => { e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4); });
+  $("name").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); (mode === "new" ? $("real") : $("pin")).focus(); } });
+  $("real").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); $("pin").focus(); } });
+
+  $("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = $("name").value.trim().replace(/\s+/g, " ");
+    const pin = $("pin").value;
+    const real = $("real").value.trim().replace(/\s+/g, " ");
+    const err = $("err");
+    if (name.length < 2 || name.length > 20) { err.textContent = MSG.bad_name; $("name").focus(); return; }
+    if (mode === "new" && (real.length < 3 || real.length > 60)) { err.textContent = MSG.bad_real_name; $("real").focus(); return; }
+    if (!/^\d{4}$/.test(pin)) { err.textContent = MSG.bad_pin; $("pin").focus(); return; }
+    err.textContent = "";
+    $("submit").disabled = true;
+    try {
+      const r = mode === "new" ? await API.register(name, pin, seed, real) : await API.login(name, pin);
+      if (r.error) {
+        if (r.error === "locked") {
+          err.textContent = "Слишком много попыток. Подожди " + Math.max(1, Math.ceil((r.seconds || 300) / 60)) + " мин.";
+        } else {
+          err.textContent = MSG[r.error] || MSG.network;
+        }
+        if (r.error === "name_taken") $("name").focus();
+        if (r.error === "bad_real_name") $("real").focus();
+        if (r.error === "bad_credentials") { $("pin").value = ""; $("pin").focus(); }
+        return;
+      }
+      location.replace("index.html");
+    } catch {
+      err.textContent = MSG.network;
+    } finally {
+      $("submit").disabled = false;
+    }
+  });
+
+  // already signed in on this device -> straight to the game
+  (async () => {
+    if (API.token()) {
+      const p = await API.me();
+      if (p) { location.replace("index.html"); return; }
+    }
+    $("checking").classList.add("hidden");
+    $("form").classList.remove("hidden");
+    setMode("new");
+    setAvatar();
+  })();
+})();
+</script>
+</body>
+</html>

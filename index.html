@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#14161d" />
+<title>EVOLET | НОВАТОРЫ</title>
+<script>
+  // not signed in -> go to the sign-up page before anything renders
+  try { if (!localStorage.getItem("cb_token")) location.replace("join.html"); } catch (e) { location.replace("join.html"); }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<!-- TOP CONTROL BAR (always visible) -->
+<div id="topbar">
+  <button id="btn-theme" class="ic-btn" aria-label="Сменить тему"><span id="ic-theme"></span></button>
+  <button id="btn-mute" class="ic-btn" aria-label="Звук"><span id="ic-mute"></span></button>
+  <button id="btn-fs" class="ic-btn" aria-label="Полный экран"><span id="ic-fs"></span></button>
+</div>
+
+<div id="stage">
+  <canvas id="game" width="960" height="540"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div class="hud-left">
+      <span id="hud-levelnum" class="pill">1</span>
+      <span id="hud-levelname">ТУТ НИЧЕГО НЕТ</span>
+      <span id="hud-practice" class="tag hidden">тренировка</span>
+    </div>
+    <div class="hud-right">
+      <span class="skull">&#9760;</span><span id="hud-deaths">0</span>
+      <span class="hint">R&nbsp;заново</span>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <div id="menu">
+    <div class="menu-inner">
+      <div class="me-card">
+        <img id="me-avatar" alt="" width="40" height="40" />
+        <div class="me-text">
+          <span id="me-name">…</span>
+          <span class="me-sub">пройдено <b id="me-levels">0/30</b></span>
+        </div>
+        <button id="logout-btn" class="link-btn">выйти</button>
+      </div>
+      <div class="devil-face">
+        <div class="horn left"></div>
+        <div class="horn right"></div>
+        <div class="face">
+          <div class="eye l"></div>
+          <div class="eye r"></div>
+          <div class="grin"></div>
+        </div>
+      </div>
+      <h1 class="title"><span class="t-fable">LEVEL</span><span class="t-devil">DEVIL</span></h1>
+      <p class="subtitle">милая спокойная игра. честно. <span class="wink">;)</span></p>
+      <button id="play-btn">ИГРАТЬ</button>
+      <div class="grid-label">уровни</div>
+      <div id="level-grid"></div>
+      <p class="menu-deaths">всего смертей: <span id="menu-deaths">0</span> &nbsp;·&nbsp; <a href="tv.html" class="lb-link">таблица лидеров →</a></p>
+      <p class="controls-hint" id="controls-hint"></p>
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div id="end-screen" class="hidden">
+    <div class="menu-inner">
+      <h1 class="end-title">ТЫ ОБЫГРАЛ<br>МЕНЯ</h1>
+      <p class="end-sub">...на этот раз.</p>
+      <p class="end-stats">смертей: <span id="end-deaths">0</span>. <span id="end-roast"></span></p>
+      <button id="end-menu-btn">В МЕНЮ</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOUCH CONTROLS (mobile only) -->
+<div id="touch-controls" class="hidden">
+  <div class="tc-group tc-move">
+    <button id="tc-left" class="tc-btn" aria-label="Влево">
+      <svg viewBox="0 0 24 24" width="30" height="30"><path d="M15 5 L7 12 L15 19" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button id="tc-right" class="tc-btn" aria-label="Вправо">
+      <svg viewBox="0 0 24 24" width="30" height="30"><path d="M9 5 L17 12 L9 19" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="tc-group tc-actions">
+    <button id="tc-menu" class="tc-btn tc-small" aria-label="Меню">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M5 7h14M5 12h14M5 17h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+    </button>
+    <button id="tc-restart" class="tc-btn tc-small" aria-label="Начать уровень заново">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 12 a8 8 0 1 1 2.4 5.7 M4 12 V6 M4 12 H10" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button id="tc-jump" class="tc-btn tc-jump" aria-label="Прыжок">
+      <svg viewBox="0 0 24 24" width="34" height="34"><path d="M5 15 L12 7 L19 15" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- portrait rotate hint -->
+<div id="rotate-hint">↻ поверни телефон — так удобнее</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "@vercel/analytics": "https://esm.sh/@vercel/analytics@2.0.1"
+  }
+}
+</script>
+<script type="module" src="analytics.js"></script>
+<script src="api.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
