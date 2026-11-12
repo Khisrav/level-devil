@@ -100,7 +100,7 @@
 <body>
   <main class="card">
     <div class="brand">
-      <h1>ЧЁРТОВА <span>БАСНЯ</span></h1>
+      <h1>КОШМАР В <span>EVOLET</span></h1>
       <p>введи имя и PIN — и вперёд</p>
     </div>
 
@@ -125,8 +125,8 @@
 
       <div id="real-wrap">
         <label for="real">Имя и фамилия</label>
-        <input id="real" name="realname" maxlength="60" placeholder="Например, Анна Иванова" autocapitalize="words" spellcheck="false" enterkeyhint="next" autocomplete="name" />
-        <p class="note">Не показываем на экране — нужно, чтобы вручить приз победителю 🏆</p>
+        <input id="real" name="realname" maxlength="60" placeholder="Видно только админам" autocapitalize="words" spellcheck="false" enterkeyhint="next" autocomplete="name" />
+        <p class="note">Нужно, чтобы вручить приз победителю 🏆</p>
       </div>
 
       <label for="pin" id="pin-label">Придумай PIN (4 цифры)</label>
@@ -149,7 +149,7 @@
   const MSG = {
     bad_name: "Ник должен быть от 2 до 20 символов",
     bad_real_name: "Напиши настоящее имя и фамилию",
-    bad_pin: "PIN — ровно 4 цифры",
+    bad_pin: "PIN - ровно 4 цифры",
     name_taken: "Это имя уже занято. Если это ты — открой «Уже играл»",
     bad_credentials: "Неверное имя или PIN",
     network: "Нет связи с сервером. Попробуй ещё раз",
